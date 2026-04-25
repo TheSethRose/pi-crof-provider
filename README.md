@@ -6,26 +6,17 @@ CrofAI is an OpenAI-compatible inference platform hosting models from DeepSeek, 
 
 ## Models
 
+Models are fetched dynamically from `https://crof.ai/v1/models` at startup, so the list is always current. A small fallback set is included if the API is unreachable.
+
+Popular models include:
+
 | Model | Reasoning | Vision | Context |
 |-------|-----------|--------|---------|
 | `kimi-k2.6` | Yes | Yes | 262K |
-| `kimi-k2.6-precision` | Yes | Yes | 262K |
-| `kimi-k2.5` | Yes | Yes | 262K |
-| `kimi-k2.5-lightning` | Yes | No | 131K |
 | `deepseek-v4-pro` | Yes | No | 1M |
-| `deepseek-v3.2` | Yes | No | 164K |
 | `glm-5.1` | No | No | 203K |
-| `glm-5.1-precision` | No | No | 203K |
-| `glm-5` | No | No | 203K |
-| `glm-4.7` | No | No | 203K |
-| `glm-4.7-flash` | No | No | 203K |
 | `gemma-4-31b-it` | Yes | Yes | 262K |
 | `qwen3.6-27b` | Yes | No | 262K |
-| `qwen3.5-397b-a17b` | Yes | No | 262K |
-| `qwen3.5-9b` | Yes | No | 262K |
-| `qwen3.5-9b-chat` | Yes | No | 262K |
-| `minimax-m2.5` | No | No | 205K |
-| `greg` | No | No | 200K |
 
 ## Install
 
