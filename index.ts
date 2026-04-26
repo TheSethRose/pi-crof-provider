@@ -130,6 +130,7 @@ const USAGE_API_BASE = "https://crof.ai/usage_api";
 let lastDashboardFetch = 0;
 let dashboardCache: CrofAccountInfo | null = null;
 let displayMode: DisplayMode = "both";
+let widgetVisible = false;
 
 function getApiKey(): string | undefined {
 	// 1. Try env var first (matches provider registration)
@@ -250,13 +251,26 @@ export default async function (pi: ExtensionAPI) {
 	});
 
 	// ── /crof-usage command ────────────────────────────────────────
-
+	// Toggle widget visibility
+	async function toggleWidget(ctx: any, data: CrofAccountInfo | null) {
+		if (widgetVisible) {
+			ctx.ui.setWidget("crof-usage", undefined);
+			widgetVisible = false;
+			return;
+		}
+		if (displayMode === "off") {
+			ctx.ui.notify("Usage display is disabled. Use /crof-config to enable.", "info");
+			return;
+		}
+		const report = formatDetailedUsage(data);
+		ctx.ui.setWidget("crof-usage", report.split("\n"));
+		widgetVisible = true;
+	}
 	pi.registerCommand("crof-usage", {
 		description: "Show CrofAI account info (credits + usable requests)",
 		handler: async (_args, ctx) => {
 			const data = await refreshAccountInfo(true);
-			const report = formatDetailedUsage(data);
-			ctx.ui.setWidget("crof-usage", report.split("\n"));
+			await toggleWidget(ctx, data);
 			await updateStatus(ctx);
 		},
 	});
@@ -287,6 +301,11 @@ export default async function (pi: ExtensionAPI) {
 			if (selected) {
 				displayMode = selected.value;
 				ctx.ui.notify(`Crof status set to: ${selected.label}`, "success");
+				// Hide widget if display mode is turned off
+				if (displayMode === "off" && widgetVisible) {
+					ctx.ui.setWidget("crof-usage", undefined);
+					widgetVisible = false;
+				}
 				await updateStatus(ctx);
 			}
 		},
